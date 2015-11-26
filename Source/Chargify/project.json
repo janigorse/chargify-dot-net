@@ -1,0 +1,18 @@
+﻿{
+  "authors": [ "Kori Francis", "David Ball" ],
+  "owners": ["Clinical Support Systems"],
+  "dependencies": {
+    "Newtonsoft.Json": "6.0.8",
+  },
+  "frameworks": {
+    "net35": {
+      "frameworkAssemblies": {
+        "System.Core": "3.5.0.0",
+        "System.Web.Extensions": "3.5.0.0",
+        "System.Xml.Linq": "3.5.0.0",
+        "System.Data.DataSetExtensions": "3.5.0.0"
+      }
+    }
+  }
+
+}
