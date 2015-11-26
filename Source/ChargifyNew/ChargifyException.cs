@@ -1,7 +1,7 @@
 ﻿
 #region License, Terms and Conditions
 //
-// ChargifyAccountElementCollection.cs
+// ChargifyException.cs
 //
 // Authors: Kori Francis <twitter.com/djbyter>, David Ball
 // Copyright (C) 2010 Clinical Support Systems, Inc. All rights reserved.
@@ -28,54 +28,30 @@
 //
 #endregion
 
-namespace ChargifyNET.Configuration
+namespace Chargify
 {
-    #region Imports 
-    using System.Configuration;
+    #region Imports
+    using System;
+    using System.Linq;
     #endregion
 
     /// <summary>
-    /// The collection of Chargify Account elements in web.config
+    /// Chargify Exception
     /// </summary>
-    [ConfigurationCollection(typeof(ChargifyAccountElement))]
-    public class ChargifyAccountElementCollection : ConfigurationElementCollection
+    [Serializable]
+    public class ChargifyException : Exception
     {
         /// <summary>
-        /// Create a new configuration element of type ChargifyAccountElement
-        /// </summary>        
-        protected override ConfigurationElement CreateNewElement()
-        {
-            return new ChargifyAccountElement();
-        }
+        /// Exception
+        /// </summary>
+        /// <param name="message">The exception message</param>
+        public ChargifyException(string message) : base(message) { }
 
         /// <summary>
-        /// Get the element
+        /// Exception
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
-        protected override object GetElementKey(ConfigurationElement element)
-        {
-            return ((ChargifyAccountElement)element).Name;
-        }
-
-        /// <summary>
-        /// Get the account element by index
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public ChargifyAccountElement this[int index]
-        {
-            get
-            {
-                return (ChargifyAccountElement)base.BaseGet(index);
-            }
-            set
-            {
-                if (base.BaseGet(index) != null)
-                    base.BaseRemoveAt(index);
-
-                this.BaseAdd(index, value);
-            }
-        }
+        /// <param name="message">The exception message</param>
+        /// <param name="innerException">The exception that caused this exception to be thrown</param>
+        public ChargifyException(string message, Exception innerException) : base(message, innerException) { }
     }
 }

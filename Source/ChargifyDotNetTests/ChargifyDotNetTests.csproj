@@ -123,13 +123,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Chargify.NET\Chargify.NET.csproj">
-      <Project>{a4e445a8-21c9-445b-a3a0-d18a4cbd0f0b}</Project>
-      <Name>Chargify.NET</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\Chargify_Net35\Chargify_Net35.csproj">
+      <Project>{a4e445a8-21c9-445b-a3a0-d18a4cbd0f0b}</Project>
+      <Name>Chargify_Net35</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

@@ -1,7 +1,7 @@
 ﻿
 #region License, Terms and Conditions
 //
-// ChargifyAccountElementCollection.cs
+// ChargifyClient.cs
 //
 // Authors: Kori Francis <twitter.com/djbyter>, David Ball
 // Copyright (C) 2010 Clinical Support Systems, Inc. All rights reserved.
@@ -28,54 +28,33 @@
 //
 #endregion
 
-namespace ChargifyNET.Configuration
+namespace Chargify
 {
-    #region Imports 
-    using System.Configuration;
+    #region Imports
+    using System;
+    using System.Linq;
     #endregion
 
-    /// <summary>
-    /// The collection of Chargify Account elements in web.config
-    /// </summary>
-    [ConfigurationCollection(typeof(ChargifyAccountElement))]
-    public class ChargifyAccountElementCollection : ConfigurationElementCollection
+    public class ChargifyClient
     {
-        /// <summary>
-        /// Create a new configuration element of type ChargifyAccountElement
-        /// </summary>        
-        protected override ConfigurationElement CreateNewElement()
+        #region Constructors
+        public ChargifyClient()
+            : this(Config.ApiKey, Config.ApiPassword, Config.UseJson)
         {
-            return new ChargifyAccountElement();
         }
 
-        /// <summary>
-        /// Get the element
-        /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
-        protected override object GetElementKey(ConfigurationElement element)
+        public ChargifyClient(string apiKey, string apiPassword, bool useJson)
         {
-            return ((ChargifyAccountElement)element).Name;
+            this.Products = new ProductService(apiKey, apiPassword, useJson);
+            this.ProductFamilies = new ProductFamilyService(apiKey, apiPassword, useJson);
         }
+        #endregion
 
-        /// <summary>
-        /// Get the account element by index
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public ChargifyAccountElement this[int index]
-        {
-            get
-            {
-                return (ChargifyAccountElement)base.BaseGet(index);
-            }
-            set
-            {
-                if (base.BaseGet(index) != null)
-                    base.BaseRemoveAt(index);
+        #region Accessors
 
-                this.BaseAdd(index, value);
-            }
-        }
+        public ProductService Products { get; private set; }
+        public ProductFamilyService ProductFamilies { get; private set; }
+
+        #endregion
     }
 }

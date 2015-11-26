@@ -28,7 +28,7 @@
 //
 #endregion
 
-namespace ChargifyNET.Configuration
+namespace Chargify.Configuration
 {
     #region Imports
     using System.Configuration;
@@ -52,12 +52,11 @@ namespace ChargifyNET.Configuration
         /// <summary>
         /// The URL of the site on Chargify to connect to
         /// </summary>
-        [ConfigurationProperty("site", IsRequired = true, DefaultValue = "https://yourdomain.chargify.com/")]
-        [RegexStringValidator(@"https?\://\S+")]
-        public string Site
+        [ConfigurationProperty("subdomain", IsRequired = true, DefaultValue = "yourdomain")]
+        public string Subdomain
         {
-            get { return (string)this["site"]; }
-            set { this["site"] = value; }
+            get { return (string)this["subdomain"]; }
+            set { this["subdomain"] = value; }
         }
 
         /// <summary>
@@ -73,7 +72,7 @@ namespace ChargifyNET.Configuration
         /// <summary>
         /// The API password (provided in the Chargify account) needed for security reasons
         /// </summary>
-        [ConfigurationProperty("apiPassword", IsRequired = true, DefaultValue = "P")]
+        [ConfigurationProperty("apiPassword", IsRequired = true, DefaultValue = "X")]
         public string ApiPassword
         {
             get { return (string)this["apiPassword"]; }
@@ -91,13 +90,13 @@ namespace ChargifyNET.Configuration
         }
 
         /// <summary>
-        /// Should the CVV value be required?
+        /// Should we use json?
         /// </summary>
-        [ConfigurationProperty("cvvRequired", IsRequired = false)]
-        public bool CvvRequired
+        [ConfigurationProperty("useJson", IsRequired = false, DefaultValue = false)]
+        public bool UseJSON
         {
-            get { return (bool)this["cvvRequired"]; }
-            set { this["cvvRequired"] = value; }
+            get { return (bool)this["useJson"]; }
+            set { this["useJson"] = value; }
         }
     }
 }

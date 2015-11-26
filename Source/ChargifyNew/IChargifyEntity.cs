@@ -1,7 +1,7 @@
 ﻿
 #region License, Terms and Conditions
 //
-// ChargifyAccountElementCollection.cs
+// IChargifyEntity.cs
 //
 // Authors: Kori Francis <twitter.com/djbyter>, David Ball
 // Copyright (C) 2010 Clinical Support Systems, Inc. All rights reserved.
@@ -28,54 +28,18 @@
 //
 #endregion
 
-namespace ChargifyNET.Configuration
+namespace Chargify
 {
-    #region Imports 
-    using System.Configuration;
+    #region Imports
+    using System;
+    using System.Linq;
     #endregion
 
-    /// <summary>
-    /// The collection of Chargify Account elements in web.config
-    /// </summary>
-    [ConfigurationCollection(typeof(ChargifyAccountElement))]
-    public class ChargifyAccountElementCollection : ConfigurationElementCollection
+    public interface IChargifyEntity
     {
         /// <summary>
-        /// Create a new configuration element of type ChargifyAccountElement
-        /// </summary>        
-        protected override ConfigurationElement CreateNewElement()
-        {
-            return new ChargifyAccountElement();
-        }
-
-        /// <summary>
-        /// Get the element
+        /// The Id of the entity
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
-        protected override object GetElementKey(ConfigurationElement element)
-        {
-            return ((ChargifyAccountElement)element).Name;
-        }
-
-        /// <summary>
-        /// Get the account element by index
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public ChargifyAccountElement this[int index]
-        {
-            get
-            {
-                return (ChargifyAccountElement)base.BaseGet(index);
-            }
-            set
-            {
-                if (base.BaseGet(index) != null)
-                    base.BaseRemoveAt(index);
-
-                this.BaseAdd(index, value);
-            }
-        }
+        int id { get; }
     }
 }

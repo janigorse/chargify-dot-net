@@ -28,7 +28,7 @@
 //
 #endregion
 
-namespace ChargifyNET.Configuration
+namespace Chargify.Configuration
 {
     #region Imports
     using System.Configuration;
