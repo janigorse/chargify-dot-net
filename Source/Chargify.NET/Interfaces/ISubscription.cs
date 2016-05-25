@@ -243,5 +243,7 @@ namespace ChargifyNET
         /// At what price was the product on when initial subscribed? (in dollars and cents)
         /// </summary>
         decimal ProductPrice { get; }
+
+        string ReferralCode { get; }
     }
 }

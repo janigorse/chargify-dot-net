@@ -197,6 +197,20 @@ namespace ChargifyNET
         }
         private BankAccountHolderType _bankAccountHolderType = BankAccountHolderType.Unknown;
 
+        public string PaymentMethodNonce
+        {
+            get { return _paymentMethodNonce;}
+            set { if (_paymentMethodNonce != value) _paymentMethodNonce = value; }
+        }
+        private string _paymentMethodNonce = string.Empty;
+
+        public string PayPalEmail
+        {
+            get { return _payPalEmail; }
+            set { if (_payPalEmail != value) _payPalEmail = value; }
+        }
+        private string _payPalEmail = string.Empty;
+
         #endregion
 
         #region IComparable<IPaymentProfileAttributes> Members
@@ -226,5 +240,8 @@ namespace ChargifyNET
         }
 
         #endregion
+
+
+        
     }
 }

@@ -73,6 +73,7 @@ namespace ChargifyNET
         private const string ProductKey = "product";
         private const string ProductVersionNumberKey = "product_version_number";
         private const string ProductPriceInCentsKey = "product_price_in_cents";
+        private const string ReferralCodeKey = "referral_code";
         #endregion
 
         #region Constructors
@@ -200,6 +201,9 @@ namespace ChargifyNET
                         break;
                     case CouponCodeKey:
                         _couponCode = obj.GetJSONContentAsString(key);
+                        break;
+                    case ReferralCodeKey:
+                        _referralCode = obj.GetJSONContentAsString(key);
                         break;
                     case ProductKey:
                         _product = obj.GetJSONContentAsProduct(key);
@@ -419,6 +423,9 @@ namespace ChargifyNET
                         break;
                     case CouponCodeKey:
                         _couponCode = dataNode.GetNodeContentAsString();
+                        break;
+                    case ReferralCodeKey:
+                        _referralCode = dataNode.GetNodeContentAsString();
                         break;
                     case ProductKey:
                         _product = dataNode.GetNodeContentAsProduct();
@@ -907,6 +914,16 @@ namespace ChargifyNET
             get { return Convert.ToDecimal(this._productPriceInCents) / 100; }
         }
 
+        
+        public string ReferralCode
+        {
+            get
+            {
+                return _referralCode;
+            }
+        }
+        private string _referralCode = string.Empty;
+
         #endregion
 
         #region Operators
@@ -1060,5 +1077,8 @@ namespace ChargifyNET
         }
 
         #endregion
+
+
+        
     }
 }

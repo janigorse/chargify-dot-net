@@ -223,5 +223,9 @@ namespace ChargifyNET
         /// Either personal or business
         /// </summary>
         BankAccountHolderType BankAccountHolderType { get; set; }
+
+        string PaymentMethodNonce { get; set; }
+
+        string PayPalEmail { get; set; }
     }
 }

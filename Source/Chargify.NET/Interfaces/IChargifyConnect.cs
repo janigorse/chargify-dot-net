@@ -402,6 +402,17 @@ namespace ChargifyNET
         /// <param name="ExistingProfile">Data concerning the existing profile in vault storage</param>
         /// <returns>The xml describing the new subscription</returns>
         ISubscription CreateSubscription(string ProductHandle, ICustomerAttributes CustomerAttributes, DateTime NextBillingAt, IPaymentProfileAttributes ExistingProfile);
+
+        /// <summary>
+        /// Create a new subscription and a new customer at the same time and import the card data from a specific vault storage
+        /// </summary>
+        /// <param name="ProductHandle">The handle to the product</param>
+        /// <param name="CustomerAttributes">The attributes for the new customer</param>
+        /// <param name="ExistingProfile">Data concerning the existing profile in vault storage</param>
+        /// <returns>The xml describing the new subscription</returns>
+        ISubscription CreateSubscription(string ProductHandle, ICustomerAttributes CustomerAttributes, ICreditCardAttributes creditCardAttributes, IPaymentProfileAttributes ExistingProfile, string ReferralCode);
+
+
         /// <summary>
         /// Create a new subscription and a new customer at the same time and use the card data from another payment profile (from the same customer).
         /// </summary>
@@ -418,7 +429,7 @@ namespace ChargifyNET
         /// <param name="CustomerAttributes">The attributes for the new customer</param>
         /// <param name="CreditCardAttributes">The credit card attributes</param>
         /// <returns>The xml describing the new subsscription</returns>
-        ISubscription CreateSubscription(string ProductHandle, ICustomerAttributes CustomerAttributes, ICreditCardAttributes CreditCardAttributes);
+        ISubscription CreateSubscription(string ProductHandle, ICustomerAttributes CustomerAttributes, ICreditCardAttributes CreditCardAttributes, string ReferralCode);
         /// <summary>
         /// Create a new subscription and a new customer at the same time
         /// </summary>
@@ -473,6 +484,10 @@ namespace ChargifyNET
         /// <param name="paymentCollectionMethod">Optional, type of payment collection method</param>
         /// <returns>If sucessful, the subscription object. Otherwise null.</returns>
         ISubscription CreateSubscription(string ProductHandle, int ChargifyID, string CouponCode, PaymentCollectionMethod? paymentCollectionMethod);
+
+        ISubscription CreateSubscription(string ProductHandle, int ChargifyCustomerId, IPaymentProfileAttributes PaymentProfile, string CouponCode);
+
+        ISubscription CreateSubscription(string ProductHandle, int ChargifyCustomerId, int PaymentProfileId, string CouponCode);
 
         /// <summary>
         /// Create a new subscription without requiring credit card information
