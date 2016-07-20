@@ -410,8 +410,9 @@ namespace ChargifyNET
         /// <param name="CustomerAttributes">The attributes for the new customer</param>
         /// <param name="ExistingProfile">Data concerning the existing profile in vault storage</param>
         /// <returns>The xml describing the new subscription</returns>
-        ISubscription CreateSubscription(string ProductHandle, ICustomerAttributes CustomerAttributes, ICreditCardAttributes creditCardAttributes, IPaymentProfileAttributes ExistingProfile, string ReferralCode);
+        ISubscription CreateSubscription(string ProductHandle, ICustomerAttributes CustomerAttributes, ICreditCardAttributes creditCardAttributes, IPaymentProfileAttributes ExistingProfile, string ReferralCode, Dictionary<int, string> ComponentsWithQuantity);
 
+        ISubscription CreateSubscription(string ProductHandle, int ChargifyCustomerId, ICreditCardAttributes creditCardAttributes, IPaymentProfileAttributes PaymentProfile, string CouponCode);
 
         /// <summary>
         /// Create a new subscription and a new customer at the same time and use the card data from another payment profile (from the same customer).
@@ -488,6 +489,11 @@ namespace ChargifyNET
         ISubscription CreateSubscription(string ProductHandle, int ChargifyCustomerId, IPaymentProfileAttributes PaymentProfile, string CouponCode);
 
         ISubscription CreateSubscription(string ProductHandle, int ChargifyCustomerId, int PaymentProfileId, string CouponCode);
+        // ah specifics
+        ISubscription CreateSubscription(string ProductHandle, ICustomerAttributes CustomerAttributes, IPaymentProfileAttributes PaymentProfile, string CouponCode);
+        ISubscription CreateSubscription(string ProductHandle, int ChargifyCustomerId, ICreditCardAttributes CreditCardAttributes, string CouponCode);
+        
+
 
         /// <summary>
         /// Create a new subscription without requiring credit card information
