@@ -2519,7 +2519,8 @@ namespace ChargifyNET
             if (ChargifyCustomerId == int.MinValue) throw new ArgumentNullException("ChargifyID");
 
             // make sure that the system ID is unique
-            if (this.LoadCustomer(ChargifyCustomerId) == null) throw new ArgumentException("Customer Not Found", "SystemID");
+            var chargifyCustomer = this.LoadCustomer(ChargifyCustomerId);
+            if (chargifyCustomer == null) throw new ArgumentException("Customer Not Found", "SystemID");
 
             IProduct subscribingProduct = this.LoadProduct(ProductHandle);
             if (subscribingProduct == null) throw new ArgumentException("Product not found");
@@ -2548,19 +2549,20 @@ namespace ChargifyNET
             if (PaymentProfile != null)
             {
                 // The round-trip "o" format uses ISO 8601 for date/time representation, neat.
+
                 subscriptionXml.Append("<payment_profile_attributes>");
-                subscriptionXml.AppendFormat("<vault_token>{0}</vault_token>", PaymentProfile.VaultToken);
-                subscriptionXml.AppendFormat("<customer_vault_token>{0}</customer_vault_token>", PaymentProfile.CustomerVaultToken);
-                subscriptionXml.AppendFormat("<current_vault>{0}</current_vault>", PaymentProfile.CurrentVault.ToString().ToLowerInvariant());
+                subscriptionXml.AppendFormat("<payment_type>{0}</payment_type>", "paypal_account");
+                subscriptionXml.AppendFormat("<first_name>{0}</first_name>", chargifyCustomer.FirstName);
+                subscriptionXml.AppendFormat("<last_name>{0}</last_name>", chargifyCustomer.LastName);
+                if (PaymentProfile.PaymentMethodNonce != String.Empty) { subscriptionXml.AppendFormat("<payment_method_nonce>{0}</payment_method_nonce>", PaymentProfile.PaymentMethodNonce); }
+                if (PaymentProfile.PayPalEmail != String.Empty) { subscriptionXml.AppendFormat("<paypal_email>{0}</paypal_email>", PaymentProfile.PayPalEmail); }
                 subscriptionXml.AppendFormat("<expiration_year>{0}</expiration_year>", PaymentProfile.ExpirationYear);
                 subscriptionXml.AppendFormat("<expiration_month>{0}</expiration_month>", PaymentProfile.ExpirationMonth);
-                if (PaymentProfile.CardType != CardType.Unknown) { subscriptionXml.AppendFormat("<card_type>{0}</card_type>", PaymentProfile.CardType.ToString().ToLowerInvariant()); } // Optional
-                if (PaymentProfile.LastFour != String.Empty) { subscriptionXml.AppendFormat("<last_four>{0}</last_four>", PaymentProfile.LastFour); } // Optional
-                if (PaymentProfile.BankName != String.Empty) { subscriptionXml.AppendFormat("<bank_name>{0}</bank_name>", PaymentProfile.BankName); }
-                if (PaymentProfile.BankRoutingNumber != String.Empty) { subscriptionXml.AppendFormat("<bank_routing_number>{0}</bank_routing_number>", PaymentProfile.BankRoutingNumber); }
-                if (PaymentProfile.BankAccountNumber != String.Empty) { subscriptionXml.AppendFormat("<bank_account_number>{0}</bank_account_number>", PaymentProfile.BankAccountNumber); }
-                if (PaymentProfile.BankAccountType != BankAccountType.Unknown) { subscriptionXml.AppendFormat("<bank_account_type>{0}</bank_account_type>", PaymentProfile.BankAccountType.ToString().ToLowerInvariant()); }
-                if (PaymentProfile.BankAccountHolderType != BankAccountHolderType.Unknown) { subscriptionXml.AppendFormat("<bank_account_holder_type>{0}</bank_account_holder_type>", PaymentProfile.BankAccountHolderType.ToString().ToLowerInvariant()); }
+                subscriptionXml.AppendFormat("<billing_address>{0}</billing_address>", CreditCardAttributes.BillingAddress);
+                subscriptionXml.AppendFormat("<billing_country>{0}</billing_country>", CreditCardAttributes.BillingCountry);
+                subscriptionXml.AppendFormat("<billing_state>{0}</billing_state>", CreditCardAttributes.BillingState);
+                subscriptionXml.AppendFormat("<billing_city>{0}</billing_city>", CreditCardAttributes.BillingCity);
+                subscriptionXml.AppendFormat("<billing_zip>{0}</billing_zip>", CreditCardAttributes.BillingZip);
                 subscriptionXml.Append("</payment_profile_attributes>");
             }
 
