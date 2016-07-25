@@ -492,7 +492,8 @@ namespace ChargifyNET
         // ah specifics
         ISubscription CreateSubscription(string ProductHandle, ICustomerAttributes CustomerAttributes, IPaymentProfileAttributes PaymentProfile, string CouponCode);
         ISubscription CreateSubscription(string ProductHandle, int ChargifyCustomerId, ICreditCardAttributes CreditCardAttributes, string CouponCode);
-        
+        ISubscription CreateSubscription(string ProductHandle, int ChargifyCustomerId, ICreditCardAttributes CreditCardAttributes, string CouponCode, Dictionary<int, string> ComponentsWithQuantity);
+        ISubscription CreateSubscription(string ProductHandle, int ChargifyCustomerId, ICreditCardAttributes CreditCardAttributes, IPaymentProfileAttributes PaymentProfile, string CouponCode, Dictionary<int, string> ComponentsWithQuantity);
 
 
         /// <summary>

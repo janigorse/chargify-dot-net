@@ -2458,6 +2458,137 @@ namespace ChargifyNET
             return response.ConvertResponseTo<Subscription>("subscription");
         }
 
+        public ISubscription CreateSubscription(string ProductHandle, int ChargifyCustomerId, ICreditCardAttributes CreditCardAttributes, string CouponCode, Dictionary<int, string> ComponentsWithQuantity)
+        {
+
+            // make sure data is valid
+            if (CreditCardAttributes == null) throw new ArgumentNullException("CreditCardAttributes");
+            if (ChargifyCustomerId == int.MinValue) throw new ArgumentNullException("ChargifyID");
+
+            // make sure that the system ID is unique
+            if (this.LoadCustomer(ChargifyCustomerId) == null) throw new ArgumentException("Customer Not Found", "SystemID");
+
+            IProduct subscribingProduct = this.LoadProduct(ProductHandle);
+            if (subscribingProduct == null) throw new ArgumentException("Product not found");
+            //if (subscribingProduct.RequireCreditCard) throw new ChargifyNetException("Product requires credit card information");
+
+            // create XML for creation of customer
+            StringBuilder subscriptionXml = new StringBuilder(GetXMLStringIfApplicable());
+            subscriptionXml.Append("<subscription>");
+            subscriptionXml.AppendFormat("<product_handle>{0}</product_handle>", ProductHandle);
+            subscriptionXml.AppendFormat("<customer_id>{0}</customer_id>", ChargifyCustomerId);
+            if (!string.IsNullOrEmpty(CouponCode)) { subscriptionXml.AppendFormat("<coupon_code>{0}</coupon_code>", CouponCode); }
+            subscriptionXml.Append("<credit_card_attributes>");
+            if (!string.IsNullOrEmpty(CreditCardAttributes.FirstName)) { subscriptionXml.AppendFormat("<first_name>{0}</first_name>", CreditCardAttributes.FirstName); }
+            if (!string.IsNullOrEmpty(CreditCardAttributes.LastName)) { subscriptionXml.AppendFormat("<last_name>{0}</last_name>", CreditCardAttributes.LastName); }
+            subscriptionXml.AppendFormat("<full_number>{0}</full_number>", CreditCardAttributes.FullNumber);
+            subscriptionXml.AppendFormat("<expiration_month>{0}</expiration_month>", CreditCardAttributes.ExpirationMonth);
+            subscriptionXml.AppendFormat("<expiration_year>{0}</expiration_year>", CreditCardAttributes.ExpirationYear);
+            if (this._cvvRequired) { subscriptionXml.AppendFormat("<cvv>{0}</cvv>", CreditCardAttributes.CVV); }
+            if (!string.IsNullOrEmpty(CreditCardAttributes.BillingAddress)) subscriptionXml.AppendFormat("<billing_address>{0}</billing_address>", CreditCardAttributes.BillingAddress);
+            if (!string.IsNullOrEmpty(CreditCardAttributes.BillingCity)) subscriptionXml.AppendFormat("<billing_city>{0}</billing_city>", CreditCardAttributes.BillingCity);
+            if (!string.IsNullOrEmpty(CreditCardAttributes.BillingState)) subscriptionXml.AppendFormat("<billing_state>{0}</billing_state>", CreditCardAttributes.BillingState);
+            if (!string.IsNullOrEmpty(CreditCardAttributes.BillingZip)) subscriptionXml.AppendFormat("<billing_zip>{0}</billing_zip>", CreditCardAttributes.BillingZip);
+            if (!string.IsNullOrEmpty(CreditCardAttributes.BillingCountry)) subscriptionXml.AppendFormat("<billing_country>{0}</billing_country>", CreditCardAttributes.BillingCountry);
+            subscriptionXml.Append("</credit_card_attributes>");
+            if (ComponentsWithQuantity != null && ComponentsWithQuantity.Count > 0)
+            {
+                subscriptionXml.Append(@"<components type=""array"">");
+                foreach (var item in ComponentsWithQuantity)
+                {
+                    subscriptionXml.Append("<component>");
+                    subscriptionXml.Append(string.Format("<component_id>{0}</component_id>", item.Key));
+                    subscriptionXml.Append(string.Format("<allocated_quantity>{0}</allocated_quantity>", item.Value));
+                    subscriptionXml.Append("</component>");
+                }
+                subscriptionXml.Append("</components>");
+            }
+            subscriptionXml.Append("</subscription>");
+
+            // now make the request
+            string response = this.DoRequest(string.Format("subscriptions.{0}", GetMethodExtension()), HttpRequestMethod.Post, subscriptionXml.ToString());
+            // change the response to the object
+            return response.ConvertResponseTo<Subscription>("subscription");
+        }
+
+        public ISubscription CreateSubscription(string ProductHandle, int ChargifyCustomerId, ICreditCardAttributes CreditCardAttributes, IPaymentProfileAttributes PaymentProfile, string CouponCode, Dictionary<int, string> ComponentsWithQuantity)
+        {
+
+            // make sure data is valid
+            if (CreditCardAttributes == null) throw new ArgumentNullException("CreditCardAttributes");
+            if (ChargifyCustomerId == int.MinValue) throw new ArgumentNullException("ChargifyID");
+
+            // make sure that the system ID is unique
+            if (this.LoadCustomer(ChargifyCustomerId) == null) throw new ArgumentException("Customer Not Found", "SystemID");
+
+            IProduct subscribingProduct = this.LoadProduct(ProductHandle);
+            if (subscribingProduct == null) throw new ArgumentException("Product not found");
+            //if (subscribingProduct.RequireCreditCard) throw new ChargifyNetException("Product requires credit card information");
+
+            // create XML for creation of customer
+            StringBuilder subscriptionXml = new StringBuilder(GetXMLStringIfApplicable());
+            subscriptionXml.Append("<subscription>");
+            subscriptionXml.AppendFormat("<product_handle>{0}</product_handle>", ProductHandle);
+            subscriptionXml.AppendFormat("<customer_id>{0}</customer_id>", ChargifyCustomerId);
+            if (!string.IsNullOrEmpty(CouponCode)) { subscriptionXml.AppendFormat("<coupon_code>{0}</coupon_code>", CouponCode); }
+            subscriptionXml.Append("<credit_card_attributes>");
+            if (!string.IsNullOrEmpty(CreditCardAttributes.FirstName)) { subscriptionXml.AppendFormat("<first_name>{0}</first_name>", CreditCardAttributes.FirstName); }
+            if (!string.IsNullOrEmpty(CreditCardAttributes.LastName)) { subscriptionXml.AppendFormat("<last_name>{0}</last_name>", CreditCardAttributes.LastName); }
+            subscriptionXml.AppendFormat("<full_number>{0}</full_number>", CreditCardAttributes.FullNumber);
+            subscriptionXml.AppendFormat("<expiration_month>{0}</expiration_month>", CreditCardAttributes.ExpirationMonth);
+            subscriptionXml.AppendFormat("<expiration_year>{0}</expiration_year>", CreditCardAttributes.ExpirationYear);
+            if (this._cvvRequired) { subscriptionXml.AppendFormat("<cvv>{0}</cvv>", CreditCardAttributes.CVV); }
+            if (!string.IsNullOrEmpty(CreditCardAttributes.BillingAddress)) subscriptionXml.AppendFormat("<billing_address>{0}</billing_address>", CreditCardAttributes.BillingAddress);
+            if (!string.IsNullOrEmpty(CreditCardAttributes.BillingCity)) subscriptionXml.AppendFormat("<billing_city>{0}</billing_city>", CreditCardAttributes.BillingCity);
+            if (!string.IsNullOrEmpty(CreditCardAttributes.BillingState)) subscriptionXml.AppendFormat("<billing_state>{0}</billing_state>", CreditCardAttributes.BillingState);
+            if (!string.IsNullOrEmpty(CreditCardAttributes.BillingZip)) subscriptionXml.AppendFormat("<billing_zip>{0}</billing_zip>", CreditCardAttributes.BillingZip);
+            if (!string.IsNullOrEmpty(CreditCardAttributes.BillingCountry)) subscriptionXml.AppendFormat("<billing_country>{0}</billing_country>", CreditCardAttributes.BillingCountry);
+            subscriptionXml.Append("</credit_card_attributes>");
+
+            if (PaymentProfile != null)
+            {
+                // The round-trip "o" format uses ISO 8601 for date/time representation, neat.
+                subscriptionXml.Append("<payment_profile_attributes>");
+                subscriptionXml.AppendFormat("<vault_token>{0}</vault_token>", PaymentProfile.VaultToken);
+                subscriptionXml.AppendFormat("<customer_vault_token>{0}</customer_vault_token>", PaymentProfile.CustomerVaultToken);
+                subscriptionXml.AppendFormat("<current_vault>{0}</current_vault>", PaymentProfile.CurrentVault.ToString().ToLowerInvariant());
+                subscriptionXml.AppendFormat("<expiration_year>{0}</expiration_year>", PaymentProfile.ExpirationYear);
+                subscriptionXml.AppendFormat("<expiration_month>{0}</expiration_month>", PaymentProfile.ExpirationMonth);
+                if (PaymentProfile.CardType != CardType.Unknown) { subscriptionXml.AppendFormat("<card_type>{0}</card_type>", PaymentProfile.CardType.ToString().ToLowerInvariant()); } // Optional
+                if (PaymentProfile.LastFour != String.Empty) { subscriptionXml.AppendFormat("<last_four>{0}</last_four>", PaymentProfile.LastFour); } // Optional
+                if (PaymentProfile.BankName != String.Empty) { subscriptionXml.AppendFormat("<bank_name>{0}</bank_name>", PaymentProfile.BankName); }
+                if (PaymentProfile.BankRoutingNumber != String.Empty) { subscriptionXml.AppendFormat("<bank_routing_number>{0}</bank_routing_number>", PaymentProfile.BankRoutingNumber); }
+                if (PaymentProfile.BankAccountNumber != String.Empty) { subscriptionXml.AppendFormat("<bank_account_number>{0}</bank_account_number>", PaymentProfile.BankAccountNumber); }
+                if (PaymentProfile.BankAccountType != BankAccountType.Unknown) { subscriptionXml.AppendFormat("<bank_account_type>{0}</bank_account_type>", PaymentProfile.BankAccountType.ToString().ToLowerInvariant()); }
+                if (PaymentProfile.BankAccountHolderType != BankAccountHolderType.Unknown) { subscriptionXml.AppendFormat("<bank_account_holder_type>{0}</bank_account_holder_type>", PaymentProfile.BankAccountHolderType.ToString().ToLowerInvariant()); }
+                subscriptionXml.Append("</payment_profile_attributes>");
+            }
+
+
+            if (ComponentsWithQuantity != null && ComponentsWithQuantity.Count > 0)
+            {
+                subscriptionXml.Append(@"<components type=""array"">");
+                foreach (var item in ComponentsWithQuantity)
+                {
+                    subscriptionXml.Append("<component>");
+                    subscriptionXml.Append(string.Format("<component_id>{0}</component_id>", item.Key));
+                    subscriptionXml.Append(string.Format("<allocated_quantity>{0}</allocated_quantity>", item.Value));
+                    subscriptionXml.Append("</component>");
+                }
+                subscriptionXml.Append("</components>");
+            }
+            subscriptionXml.Append("</subscription>");
+
+            // now make the request
+            string response = this.DoRequest(string.Format("subscriptions.{0}", GetMethodExtension()), HttpRequestMethod.Post, subscriptionXml.ToString());
+            // change the response to the object
+            return response.ConvertResponseTo<Subscription>("subscription");
+           
+           
+
+            
+        }
+
         /// <summary>
         /// Create a new subscription 
         /// </summary>
